@@ -179,31 +179,32 @@ Test mencakup:
 
 ## 🛡️ Ringkasan API Endpoints
 
-### 🔐 Authentication (`/api/auth`)
-- `GET /api/auth/nonce` - Generate SIWE nonce dengan expiration.
-- `POST /api/auth/verify` - Verifikasi signature EIP-4361 & penerbitan token.
-- `POST /api/auth/refresh` - Refresh access token dengan rotation token.
-- `POST /api/auth/logout` - Revokasi refresh token dari database.
-- `GET /api/auth/me` - Ambil profil pengguna terautentikasi.
+### 🔐 Authentication (`/api/v1/auth`)
+- `POST /api/v1/auth/login` - Login email/password Admin & Sekolah.
+- `POST /api/v1/auth/student/request-otp` - Request OTP NISN siswa.
+- `POST /api/v1/auth/student/login` - Verifikasi OTP & login siswa.
+- `GET /api/v1/auth/siwe/nonce?address=0x...` - Generate SIWE nonce dengan expiration.
+- `POST /api/v1/auth/refresh` - Refresh access token dengan rotation token.
+- `POST /api/v1/auth/logout` - Revokasi refresh token dari database.
 
-### 📝 Pengajuan Bantuan (`/api/applications`)
-- `POST /api/applications` - Siswa membuat permohonan bantuan.
-- `GET /api/applications` - Daftar permohonan (terisolasi per role).
-- `GET /api/applications/:id` - Detail permohonan.
-- `POST /api/applications/:id/submit-onchain` - Inisiasi pencatatan pengajuan ke smart contract.
+### 📝 Pengajuan Bantuan (`/api/v1/applications`)
+- `POST /api/v1/applications` - Siswa membuat permohonan bantuan.
+- `GET /api/v1/applications` - Daftar permohonan (terisolasi per role).
+- `GET /api/v1/applications/:id` - Detail permohonan.
+- `POST /api/v1/applications/:id/submit-onchain` - Inisiasi pencatatan pengajuan ke smart contract.
 
-### 🏫 Verifikasi Sekolah (`/api/school`)
-- `GET /api/school/applications` - Daftar siswa sekolah yang perlu verifikasi.
-- `PATCH /api/school/applications/:id/verify` - Verifikasi kelayakan administratif siswa.
-- `PATCH /api/school/applications/:id/reject` - Tolak kelayakan siswa dengan catatan alasan.
+### 🏫 Verifikasi Sekolah (`/api/v1/schools`)
+- `GET /api/v1/schools/applications` - Daftar siswa sekolah yang perlu verifikasi.
+- `PATCH /api/v1/schools/applications/:id/verify` - Verifikasi kelayakan administratif siswa.
+- `PATCH /api/v1/schools/applications/:id/reject` - Tolak kelayakan siswa dengan catatan alasan.
 
-### ⛓️ Blockchain Operations (`/api/blockchain`)
-- `POST /api/blockchain/verify` - Eksekusi verifikasi on-chain oleh signer sekolah.
-- `POST /api/blockchain/reject` - Eksekusi penolakan on-chain oleh signer sekolah.
-- `POST /api/blockchain/claim` - Eksekusi klaim bantuan on-chain oleh siswa penerima.
-- `GET /api/blockchain/status/:applicationId` - Periksa status terkini langsung dari smart contract.
+### ⛓️ Blockchain Operations (`/api/v1/blockchain`)
+- `POST /api/v1/blockchain/verify` - Eksekusi verifikasi on-chain oleh signer sekolah.
+- `POST /api/v1/blockchain/reject` - Eksekusi penolakan on-chain oleh signer sekolah.
+- `POST /api/v1/blockchain/claim` - Eksekusi klaim bantuan on-chain oleh siswa penerima.
+- `GET /api/v1/blockchain/status/:applicationId` - Periksa status terkini langsung dari smart contract.
 
-### 🌐 Data Publik & Transparansi (`/api/public`)
-- `GET /api/public/summary` - Metrik agregat bantuan tersalurkan, total penerima, dan dana aktif.
-- `GET /api/public/schools` - Daftar sekolah terdaftar sebagai validator sah.
-- `GET /api/public/ledger` - Log audit publik dan riwayat transaksi on-chain.
+### 🌐 Data Publik & Transparansi (`/api/v1/public`)
+- `GET /api/v1/public/stats` - Metrik agregat bantuan tersalurkan, total penerima, dan dana aktif.
+- `GET /api/v1/public/schools` - Daftar sekolah terdaftar sebagai validator sah.
+- `GET /api/v1/public/ledger` - Log audit publik dan riwayat transaksi on-chain.

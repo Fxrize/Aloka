@@ -13,7 +13,7 @@ const envSchema = z.object({
   JWT_REFRESH_SECRET: z.string().min(32, "JWT_REFRESH_SECRET must be at least 32 characters"),
   JWT_ACCESS_EXPIRY: z.string().default("15m"),
   JWT_REFRESH_EXPIRY: z.string().default("7d"),
-  POLYGON_RPC_URL: z.string().url().default("https://rpc-amoy.polygon.technology"),
+  POLYGON_RPC_URL: z.string().url().default("https://polygon-amoy-bor-rpc.publicnode.com"),
   ESCROW_CONTRACT_ADDRESS: z.string().default("0xd938a4d1e8de7bd0eebe7fba0fbff4fc29154601"),
   TOKEN_CONTRACT_ADDRESS: z.string().default("0xf7CDC1cc0a689585B7E9c25E29319Cd4B73e0Ad2"),
   GOV_PRIVATE_KEY: z.string().optional().default(""),
