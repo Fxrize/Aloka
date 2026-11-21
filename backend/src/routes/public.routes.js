@@ -198,4 +198,60 @@ router.get("/schools", async (req, res, next) => {
   }
 });
 
+/**
+ * GET /api/v1/public/ledger
+ * Daftar log audit transaksi on-chain untuk explorer publik (paginated, non-PII)
+ */
+router.get("/ledger", async (req, res, next) => {
+  try {
+    const page = Math.max(1, parseInt(req.query.page, 10) || 1);
+    const limit = Math.min(50, Math.max(1, parseInt(req.query.limit, 10) || 10));
+    const skip = (page - 1) * limit;
+
+    const [total, logs] = await Promise.all([
+      prisma.auditLog.count({
+        where: { txHash: { not: null } },
+      }),
+      prisma.auditLog.findMany({
+        where: { txHash: { not: null } },
+        select: {
+          id: true,
+          action: true,
+          actorRole: true,
+          txHash: true,
+          createdAt: true,
+        },
+        orderBy: { createdAt: "desc" },
+        skip,
+        take: limit,
+      }),
+    ]);
+
+    const formattedLogs = logs.map((log) => ({
+      id: log.id,
+      action: log.action,
+      actorRole: log.actorRole,
+      txHash: log.txHash,
+      createdAt: log.createdAt,
+      polygonscanUrl: `https://amoy.polygonscan.com/tx/${log.txHash}`,
+    }));
+
+    return successResponse(
+      res,
+      {
+        items: formattedLogs,
+        pagination: {
+          page,
+          limit,
+          total,
+          totalPages: Math.ceil(total / limit),
+        },
+      },
+      "Public transaction ledger retrieved"
+    );
+  } catch (error) {
+    next(error);
+  }
+});
+
 export default router;
